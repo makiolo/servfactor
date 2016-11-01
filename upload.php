@@ -16,14 +16,19 @@ if (move_uploaded_file($_FILES['uploaded']['tmp_name'], $uploaded_file))
 {
 	echo "El fichero es valido y se subio con exito.\n";
 }
+else
+{
+?>
+	<form enctype="multipart/form-data" action="upload.php" method="POST">
+	    Enviar este fichero: <input name="uploaded" type="file" />
+	    <input type="submit" value="Enviar fichero" />
+	</form>
+<?php
+	exit 1;
+}
 
 // echo 'Mas informacion de depuracion:';
 // u::var_dump($_FILES);
 
 ?>
-
-<form enctype="multipart/form-data" action="upload.php" method="POST">
-    Enviar este fichero: <input name="uploaded" type="file" />
-    <input type="submit" value="Enviar fichero" />
-</form>
 
