@@ -28,7 +28,6 @@ else
 	    <input type="submit" value="Enviar fichero" />
 	</form>
 <?php
-	exit 1;
 }
 
 // echo 'Mas informacion de depuracion:';
