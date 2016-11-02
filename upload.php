@@ -1,4 +1,8 @@
 <?php
+ini_set('upload_max_filesize', '400M');
+ini_set('post_max_size', '400M');
+ini_set('max_input_time', 300);
+ini_set('max_execution_time', 300);
 
 include 'util.php';
 class u extends \utilphp\util { }
