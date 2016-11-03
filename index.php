@@ -13,11 +13,7 @@ if(isset($_REQUEST['quiet']))
 	header("Content-Type: text/plain");
 }
 
-if(!$quiet_mode)
-{
-	echo "Welcome to " . u::get_current_url() . "<br/><a href='?quiet'>CSV version</a><br/><br />";
-}
-else
+if($quiet_mode)
 {
 	print "package;version;platform;download;hits;last_download\n";
 }
