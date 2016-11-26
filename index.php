@@ -1,10 +1,12 @@
 <?php
-include 'util.php';
-include 'stats.php';
-
-// Globally namespaced version of the class
-class u extends \utilphp\util { }
-// ok, php, my friend
+$debug_mode = false;
+if(isset($_REQUEST['debug']))
+{
+	$debug_mode = true;
+	// Debug PHP
+	ini_set('display_errors', 'On'); 
+	error_reporting(E_ALL);
+}
 
 $quiet_mode = false;
 if(isset($_REQUEST['quiet']))
@@ -12,6 +14,80 @@ if(isset($_REQUEST['quiet']))
 	$quiet_mode = true;
 	header("Content-Type: text/plain");
 }
+
+function formatSize( $bytes )
+{
+	$types = array( 'B', 'KB', 'MB', 'GB', 'TB' );
+	for( $i = 0; $bytes >= 1024 && $i < ( count( $types ) -1 ); $bytes /= 1024, $i++ );
+	return( round( $bytes, 2 ) . " " . $types[$i] );
+}
+
+if(!$quiet_mode)
+{
+
+/* get disk space free (in bytes) */
+$df = disk_free_space("packages/");
+/* and get disk space total (in bytes)  */
+$dt = disk_total_space("packages/");
+/* now we calculate the disk space used (in bytes) */
+$du = $dt - $df;
+/* percentage of disk used - this will be used to also set the width % of the progress bar */
+$dp = sprintf('%.2f',($du / $dt) * 100);
+
+/* and we formate the size from bytes to MB, GB, etc. */
+$df = formatSize($df);
+$du = formatSize($du);
+$dt = formatSize($dt);
+
+?>
+
+<style type='text/css'>
+
+.progress {
+        border: 2px solid #5E96E4;
+        height: 32px;
+        width: 540px;
+        margin: 30px auto;
+}
+.progress .prgbar {
+        background: #A7C6FF;
+        width: <?php echo $dp; ?>%;
+        position: relative;
+        height: 32px;
+        z-index: 999;
+}
+.progress .prgtext {
+        color: #286692;
+        text-align: center;
+        font-size: 13px;
+        padding: 9px 0 0;
+        width: 540px;
+        position: absolute;
+        z-index: 1000;
+}
+.progress .prginfo {
+        margin: 3px 0;
+}
+
+</style>
+<div class='progress'>
+        <div class='prgtext'><?php echo $dp; ?>% Disk Used</div>
+        <div class='prgbar'></div>
+        <div class='prginfo'>
+                <span style='float: left;'><?php echo "$du of $dt used"; ?></span>
+                <span style='float: right;'><?php echo "$df of $dt free"; ?></span>
+                <span style='clear: both;'></span>
+        </div>
+</div>
+<?php
+} // end !quiet
+
+include 'util.php';
+include 'stats.php';
+
+// Globally namespaced version of the class
+class u extends \utilphp\util { }
+// ok, php, my friend
 
 if($quiet_mode)
 {
@@ -21,8 +97,29 @@ if($quiet_mode)
 $data = read_stats();
 // u::var_dump($data);
 
+// order by last download
+$arr = array();    
 $files = scandir('packages/');
-foreach($files as $file)
+$dir = 'packages/';
+foreach ($files as $file)
+{
+
+	$hits_info = get_hits($data, $file);
+	$hits = $hits_info[0];
+	$last_download = $hits_info[1];
+	if($last_download === NULL)
+	{
+		$arr[$file] = 0;
+	}
+	else
+	{
+		$arr[$file] = $last_download;
+	}
+}
+arsort($arr);
+$arr = array_keys($arr);
+
+foreach($arr as $file)
 {
 	// bug si el package tiene "-"
 	if(u::ends_with($file, "-cmake.tar.gz"))
@@ -63,18 +160,16 @@ foreach($files as $file)
 			}
 			if(!$quiet_mode)
 			{
-				echo "package: " . $package . "<br \>";
-				echo "version: " . $version . "<br \>";
-				echo "platform: " . $platform . "<br \>";
+				echo "package: " . $package ." (" . $version . ") ";
 				if($hits > 0)
 				{
-					echo "<a href='download.php?file=".$file."'>Download</a> (".$hits." hits, last download: ".$formatted.")";
+					echo "<a href='download.php?file=".$file."'>$platform</a> (".$hits." hits, last download: ".$formatted.")";
 				}
 				else
 				{
-					echo "<a href='download.php?file=".$file."'>Download</a> (".$hits." hits)";
+					echo "<a href='download.php?file=".$file."'>$platform</a> (".$hits." hits)";
 				}
-				echo "<br /><br />";
+				echo "<br />";
 			}
 			else
 			{
