@@ -195,7 +195,7 @@ foreach($arr as $file)
 				echo "" . $package ." (" . $version . ") ";
 				if($hits > 0)
 				{
-					echo "<a href='download.php?file=".$file."'>$platform</a> (".$hits." hits, last download: ".$formatted.")";
+					echo "<a href='download.php?file=".$file."'>$platform</a> (".$hits." hits, last use: ".$formatted.")";
 				}
 				else
 				{
