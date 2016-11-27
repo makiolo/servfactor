@@ -119,6 +119,40 @@ foreach ($files as $file)
 arsort($arr);
 $arr = array_keys($arr);
 
+if(!$quiet_mode)
+{
+	if($dp > 95)
+	{
+		for ($i = 1; $i <= 10; $i++) {
+			$last_file = array_pop($arr);
+			if(u::ends_with($last_file, "-cmake.tar.gz"))
+			{
+				$big_file = str_replace("-cmake.tar.gz", ".tar.gz", $last_file);
+				echo "remove cmake ". $last_file."<br />";
+				echo "remove big ". $big_file."<br />";
+				if(!unlink($dir . $last_file))
+				{
+					echo "error removing ".$last_file."<br />";
+				}
+				else
+				{
+					echo "removed ".$last_file."<br />";
+				}
+
+				if(!unlink($dir . $big_file))
+				{
+					echo "error removing ".$dir.$big_file."<br />";
+				}
+				else
+				{
+					echo "removed ".$dir.$big_file."<br />";
+				}
+				break;
+			}
+		}
+	}
+}
+
 foreach($arr as $file)
 {
 	// bug si el package tiene "-"
@@ -160,7 +194,7 @@ foreach($arr as $file)
 			}
 			if(!$quiet_mode)
 			{
-				echo "package: " . $package ." (" . $version . ") ";
+				echo "" . $package ." (" . $version . ") ";
 				if($hits > 0)
 				{
 					echo "<a href='download.php?file=".$file."'>$platform</a> (".$hits." hits, last download: ".$formatted.")";
