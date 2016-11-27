@@ -128,8 +128,6 @@ if(!$quiet_mode)
 			if(u::ends_with($last_file, "-cmake.tar.gz"))
 			{
 				$big_file = str_replace("-cmake.tar.gz", ".tar.gz", $last_file);
-				echo "remove cmake ". $last_file."<br />";
-				echo "remove big ". $big_file."<br />";
 				if(!unlink($dir . $last_file))
 				{
 					echo "error removing ".$last_file."<br />";
