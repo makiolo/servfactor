@@ -14,7 +14,7 @@ function read_stats()
 	{
 		if (!is_writable($stats))
 		{
-			 echo "Cannot write in file ($stats)";
+			 echo "Cannot write in file ($stats) !!<br /><br />";
 		};
 		$f = fopen($stats, 'r');
 		$data = fread($f, filesize($stats));
