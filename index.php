@@ -113,7 +113,7 @@ foreach ($files as $file)
 	}
 	else
 	{
-		$arr[$file] = $last_download;
+		$arr[$file] = strtotime($last_download->format("c"));
 	}
 }
 arsort($arr);
