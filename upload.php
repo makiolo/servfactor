@@ -27,6 +27,7 @@ else
 	    Enviar este fichero: <input name="uploaded" type="file" />
 	    <input type="submit" value="Enviar fichero" />
 	</form>
+	<br />
 <?php
 	$code = $_FILES['uploaded']['error'];
 	switch ($code) { 
@@ -54,8 +55,8 @@ else
 	default: 
 		$message = "Unknown upload error"; 
 		break; 
-	} 
-	header($_SERVER['SERVER_PROTOCOL'] . ' ' . $code, true, 500);
+	}
+	echo "Error: " . $message;
 }
 
 ?>
