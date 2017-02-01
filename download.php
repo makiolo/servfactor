@@ -18,6 +18,26 @@ if (!file_exists($file))
 	exit;
 }
 
+// file are valids in pairs
+if(u::ends_with($file, "-cmake.tar.gz"))
+{
+	// assert exists no cmake file (big bin)
+	if (!file_exists(str_replace("-cmake.tar.gz", ".tar.gz", $file)))
+	{
+		header("HTTP/1.0 404 Not Found");
+		exit;
+	}
+}
+else
+{
+	// assert exists cmake file (small bin)
+	if (!file_exists(str_replace(".tar.gz", "-cmake.tar.gz", $file)))
+	{
+		header("HTTP/1.0 404 Not Found");
+		exit;
+	}
+}
+
 $data = read_stats();
 $data = inc_stats($data, $file);
 write_stats($data);
@@ -35,4 +55,3 @@ flush();
 readfile($file);
 exit;
 ?>
-
