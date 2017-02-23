@@ -1,4 +1,8 @@
 <?php
+// Debug PHP
+ini_set('display_errors', 'On'); 
+error_reporting(E_ALL);
+
 ini_set('upload_max_filesize', '800M');
 ini_set('post_max_size', '800M');
 ini_set('max_input_time', 300);
@@ -57,6 +61,7 @@ else
 		break; 
 	}
 	echo "Error: " . $message;
+	phpinfo();
 }
 
 ?>
