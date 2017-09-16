@@ -158,13 +158,19 @@ foreach($arr as $file)
 	// bug si el package tiene "-"
 	if(u::ends_with($file, "-cmake.tar.gz"))
 	{
-		$substance = $file;
-		$substance = substr($substance, 0, strrpos($substance, "-"));
-		$platform = substr($substance, strrpos($substance, "-")+1);
-		$substance = substr($substance, 0, strrpos($substance, "-"));
-		$version = substr($substance, strrpos($substance, "-")+1);
-		$substance = substr($substance, 0, strrpos($substance, "-"));
-		$package = $substance;
+		// $substance = $file;
+
+		preg_match('/([\w-]+)-([0-9\.]+)-([\w-\.]+)-cmake.tar.gz/', $file, $matches);
+		$package = $matches[1];
+		$version = $matches[2];
+		$platform = $matches[3];
+
+		// $substance = substr($substance, 0, strrpos($substance, "-"));
+		// $platform = substr($substance, strrpos($substance, "-")+1);
+		// $substance = substr($substance, 0, strrpos($substance, "-"));
+		// $version = substr($substance, strrpos($substance, "-")+1);
+		// $substance = substr($substance, 0, strrpos($substance, "-"));
+		// $package = $substance;
 		if(!isset($_REQUEST['platform']) || ($_REQUEST['platform'] == $platform))
 		{
 			$hits_info = get_hits($data, $file);

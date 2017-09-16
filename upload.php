@@ -20,6 +20,13 @@ if(!is_writable($artifacts))
 }
 
 $uploaded_file = $artifacts . "/" . basename($_FILES['uploaded']['name']);
+
+if(isset($_FILES['uploaded']) && file_exists($uploaded_file))
+{
+	echo "file: ".$uploaded_file." already esxists!";
+	exit;
+}
+
 if (move_uploaded_file($_FILES['uploaded']['tmp_name'], $uploaded_file))
 {
 	echo "El fichero es valido y se subio con exito.\n";
